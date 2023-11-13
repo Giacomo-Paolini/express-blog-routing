@@ -66,7 +66,21 @@ function show (req, res) {
     }
 }
 
+function create (req, res) {
+    res.format({
+        html: () => {
+            res.type("html").send(
+                "<h1>Creazione nuovo post</h1>"
+            );
+        },
+        default: () => {
+            res.status(406).send("Not Acceptable");
+        },
+    })
+}
+
 module.exports = {
   index,
   show,
+  create
 }
