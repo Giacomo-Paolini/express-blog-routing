@@ -79,8 +79,20 @@ function create (req, res) {
     })
 }
 
+function download (req, res) {
+    const slug = req.params.slug;
+    const post = posts.find(post => post.slug === slug);
+
+    if (post) {
+        res.download(`./public/assets/images/${post.image}`, `${post.slug}.png`);
+    } else {
+        res.status(404).send("Post not found");
+    }
+
+}
 module.exports = {
   index,
   show,
-  create
+  create,
+  download,
 }
