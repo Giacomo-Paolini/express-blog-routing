@@ -1,4 +1,4 @@
-const posts = require('../db/posts')
+const posts = require('../db/arrayPosts')
 
 function index (req, res) {
 
@@ -34,6 +34,39 @@ function index (req, res) {
     })
 }
 
+function show (req, res) {
+    const slug = req.params.slug;
+    const post = posts.find(post => post.slug === slug);
+
+    if (post) {
+        res.format({
+            html: () => {
+                res.type("html")
+                const html = [`<h1>${post.title}</h1>`];
+
+                html.push(`<p>${post.content}</p>`);
+
+                html.push(`<img src="/assets/images/${post.image}" alt="${post.title}" class="w-25"><br>`);
+
+                post.tags.forEach(tag => {
+                    html.push(`<span class="badge bg-primary">${tag}</span>`);
+                });
+
+                res.send(html.join(""));
+            },
+            json: () => {
+                res.type("json").send(JSON.stringify(post))
+            },
+            default: () => {
+                res.status(406).send("Not Acceptable");
+            },
+        })
+    } else {
+        res.status(404).send("Post not found");
+    }
+}
+
 module.exports = {
   index,
+  show,
 }
